@@ -19,14 +19,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Env config
 env = environ.Env()
-environ.Env.read_end()
+environ.Env.read_env()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
-
+VALID_API_KEYS = env.str("VALID_API_KEYS").split(",")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -36,68 +36,90 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 # Application definition
 
 DJANGO_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
-PROJECTS_APPS= [
-    
+PROJECTS_APPS = [
+    "apps.blog",
 ]
 
 THIRD_PARTY_APPS = [
-    'rest_framework',
-    'channels',
+    "rest_framework",
+    "channels",
+    "django_ckeditor_5",
+    'django_celery_results',
+    'django_celery_beat',
+    'storages'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECTS_APPS + THIRD_PARTY_APPS
 
+CKEDITOR_5_CONFIGS = {
+    "default": {
+        "toolbar": [
+            "heading",
+            "|",
+            "bold",
+            "italic",
+            "link",
+            "bulletedList",
+            "numberedList",
+            "blockQuote",
+        ],
+        "autoParagraph": False
+    }
+}
+CKEDITOR_5_UPLOAD_PATH = "media/"
+CKEDITOR_5_CUSTOM_CSS = "css/ckeditor5.css"
+
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'core.urls'
+ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-ASGI_APPLICATION = 'core.asgi.application'
+WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env("DATABASE_NAME"),
-        'USER': env("DATABASE_USER"),
-        'PASSWORD': env("DATABASE_PASSWORD"),
-        'HOST': env("DATABASE_HOST"),
-        'PORT': 5432
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DATABASE_NAME"),
+        "USER": env("DATABASE_USER"),
+        "PASSWORD": env("DATABASE_PASSWORD"),
+        "HOST": env("DATABASE_HOST"),
+        "PORT": 5432,
     }
 }
 
@@ -107,16 +129,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -124,9 +146,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -136,38 +158,113 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_LOCATION= "static"
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATIC_LOCATION = "static"
+#STATIC_URL = "static/"
+#STATIC_ROOT = os.path.join(BASE_DIR, "static")
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, "staticfiles")]
+#MEDIA_URL = "media/"
+#MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticatedOrReadOnly"
+        "rest_framework.permissions.AllowAny"
     ]
 }
 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts":[env("REDIS_URL")]
-        }    
+        "CONFIG": {"hosts": [env("REDIS_URL")]},
     }
 }
+
+REDIS_HOST = env("REDIS_HOST")
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": env("REDIS_URL"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient"
-        }
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
     }
 }
 
 CHANNELS_ALLOWED_ORIGINS = "http://localhost:3000"
+
+#CELERY WORKER
+CELERY_ACCEPT_CONTENT = ['json'] # Formatos de datos que acepta
+CELERY_TASK_SERIALIZER =  'json' # Como se envian las tareas a la cola
+CELERY_RESULT_SERIALIZER = 'json' # como se serializa el resultado de una tarea
+CELERY_TIMEZONE = "Europe/Madrid" 
+# Broker = cola de mensajes
+CELERY_BROKER_URL = env("REDIS_URL") # Sistema que gestiona la cola de tareas
+# Conf del trasporte Redis
+CELERY_BROKER_TRANSPORT_OPTIONS ={
+    "visibility_timeout": 3600, # Si no termina de ejecutarla la tarea vuelve a la cola pasado este tiempo 1h
+    "socket_timeout": 5, # Timeout de conexion con Redis, si tarda mucho se corta la conexion
+    "retry_on_timeout": True # Si redis no responde a tiempo, intenta reconectar
+} 
+
+CELERY_RESULT_BACKEND = 'django-db' # Donde se guardan los resultados de las tareas
+CELERY_CACHE_BACKEND = 'default' # Sistema de cache, el de la confif de settings
+CELERY_IMPORTS = (
+    'core.tasks',
+    'apps.blog.tasks'
+)
+
+#CELERY BEAT
+CELERY_BEAT_SCHEDULER ='django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULE = {}
+
+
+#AWS
+#AWS_ACCESS_KEY_ID=env("AWS_ACCESS_KEY_ID")
+#WS_SECRET_ACCESS_KEY=env("AWS_SECRET_ACCESS_KEY")
+#AWS_STORAGE_BUCKET_NAME=env("AWS_STORAGE_BUCKET_NAME")
+#AWS_S3_REGION_NAME=env("AWS_S3_REGION_NAME")
+#AWS_S3_CUSTOM_DOMAIN=f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+
+# GOOGLE CLOUD STORAGE
+GS_BUCKET_NAME = env("GS_BUCKET_NAME")
+GS_PROJECT_ID = env("GS_PROJECT_ID")
+#GS_DEFAULT_ACL = "publicRead"
+GS_FILE_OVERWRITE = False
+GS_QUERYSTRING_AUTH = False
+
+
+# DEFAULT STORAGE
+# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage" AWS
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+
+#AWS_QUERYSTRING_AUTH = False
+#AWS_FILE_OVERWRITE = False
+#AWS_DEFAULT_ACL = 'public-read'
+#AWS_QUERYSTRING_EXPIRE = 5
+
+# OPTIONAL PARAMETERS FOR S3 OBJECTS
+# AWS_S3_OBJECT_PARAMETERS = {
+#    "CacheControl": 'max-age=8400' # 1 day cache storage   
+# }
+
+GS_OBJECT_PARAMETERS = {
+    "cache_control": "max-age=86400"  # 1 día
+}
+
+GS_CUSTOM_DOMAIN = f"storage.googleapis.com/{GS_BUCKET_NAME}"
+
+# STATIC FILES
+STATIC_LOCATION = "static"
+STATIC_URL = f"https://{GS_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
+STATICFILES_STORAGE = "core.storage_backends.StaticStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# MEDIA FILES
+MEDIA_LOCATION = "media"
+MEDIA_URL = f"https://{GS_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+MEDIA_ROOT = MEDIA_URL
