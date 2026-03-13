@@ -7,11 +7,14 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
         
 class CategoryListSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Category
         fields = [
+            "id",
             "name",
-            "slug"
+            "slug",
+            "thumbnail"
         ]
 
 
@@ -45,7 +48,7 @@ class PostSerializer(serializers.ModelSerializer):
         # Or also depends on the fields you want to show on Frontend
         
     def get_view_count(self, obj):
-        return obj.post_view.count()
+        return obj.post_analytics.views if obj.post_analytics else 0
 
 
 class PostListSerializer(serializers.ModelSerializer):
@@ -64,6 +67,6 @@ class PostListSerializer(serializers.ModelSerializer):
         ]
         
     def get_view_count(self, obj):
-        return obj.post_view.count()
+        return obj.post_analytics.views if obj.post_analytics else 0
 
 

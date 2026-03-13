@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Post, Category, Heading, PostAnalytics
+from .models import Post, Category, Heading, PostAnalytics, CategoryAnalytics
 from django_ckeditor_5.widgets import CKEditor5Widget
 
 
@@ -17,6 +17,17 @@ class CategoryAdmin(admin.ModelAdmin):
     list_editable = ('title',)
     
     
+@admin.register(CategoryAnalytics)
+class CategoryAnalyticsAdmin(admin.ModelAdmin):
+    list_display = ('category_name', 'views', 'impressions', 'clicks', 'click_through_rate', 'avg_time_on_page')
+    search_fields = ('category__name',)
+    readonly_fields = ('category','views','impressions','clicks','click_through_rate','avg_time_on_page')
+
+    def category_name(self, obj):
+        return obj.category.name
+    
+    category_name.short_description = 'Category Name'    
+
 class HeadingInline(admin.TabularInline):
     model = Heading
     extra = 1

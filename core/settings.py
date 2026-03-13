@@ -173,6 +173,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 REST_FRAMEWORK = {
+    
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+    
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny"
     ]
@@ -240,7 +244,7 @@ GS_QUERYSTRING_AUTH = False
 
 # DEFAULT STORAGE
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage" AWS
-DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+DEFAULT_FILE_STORAGE = "core.storage_backends.MediaStorage"
 
 #AWS_QUERYSTRING_AUTH = False
 #AWS_FILE_OVERWRITE = False
